@@ -95,24 +95,35 @@ test('test5: customer Eric with a performance 20 as-like', t => {
     'You earned 4 credits \n');
 });
 
-const invoice = {
-  'customer': 'BigCo',
-  'performances': [
-    {
-      'playID': 'hamlet',
-      'audience': 55,
-    },
-    {
-      'playID': 'as-like',
-      'audience': 35,
-    },
-    {
-      'playID': 'othello',
-      'audience': 40,
-    },
-  ],
-};
-
+test('test6: customer Eric with a performance 30 hamlet 19 as-like 29 othello', t => {
+  //given
+  const invoice = {
+    'customer': 'Eric',
+    'performances': [
+      {
+        'playID': 'hamlet',
+        'audience': 30,
+      },
+      {
+        'playID': 'as-like',
+        'audience': 19,
+      },
+      {
+        'playID': 'othello',
+        'audience': 29,
+      },
+    ],
+  };
+  //when
+  const result = statement(invoice, plays);
+  //then
+  t.is(result, 'Statement for Eric\n' +
+    ' Hamlet: $400.00 (30 seats)\n' +
+    ' As You Like It: $357.00 (19 seats)\n' +
+    ' Othello: $400.00 (29 seats)\n' +
+    'Amount owed is $1,157.00\n' +
+    'You earned 3 credits \n');
+});
 
 const plays = {
   'hamlet': {
