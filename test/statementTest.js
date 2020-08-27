@@ -125,6 +125,33 @@ test('test6: customer Eric with a performance 30 hamlet 19 as-like 29 othello', 
     'You earned 3 credits \n');
 });
 
+test('test7: customer Eric with a performance not found', t => {
+  //given
+  const plays = {
+    'othello': {
+      'name': 'Othello',
+      'type': 'tragedy1',
+    },
+  };
+  const invoice = {
+    'customer': 'Eric',
+    'performances': [
+      {
+        'playID': 'othello',
+        'audience': 40,
+      },
+    ],
+  };
+  try {
+    //when
+    statement(invoice, plays);
+    t.fail();
+  } catch (e) {
+    //then
+    t.is(e.message, 'unknown type: tragedy1');
+  }
+});
+
 const plays = {
   'hamlet': {
     'name': 'Hamlet',
