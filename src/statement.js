@@ -15,18 +15,22 @@ function calcTragedyAmount(perf) {
   return thisAmount;
 }
 
+function calcComedyAmount(perf) {
+  let thisAmount = 30000;
+  if (perf.audience > 20) {
+    thisAmount += 10000 + 500 * (perf.audience - 20);
+  }
+  return thisAmount + 300 * perf.audience;
+}
+
 function calcAmount(play, perf) {
   let thisAmount = 0;
   switch (play.type) {
     case 'tragedy':
-      thisAmount = calcTragedyAmount(perf)
+      thisAmount = calcTragedyAmount(perf);
       break;
     case 'comedy':
-      thisAmount = 30000;
-      if (perf.audience > 20) {
-        thisAmount += 10000 + 500 * (perf.audience - 20);
-      }
-      thisAmount += 300 * perf.audience;
+      thisAmount = calcComedyAmount(perf);
       break;
     default:
       throw new Error(`unknown type: ${play.type}`);
