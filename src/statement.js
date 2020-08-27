@@ -54,7 +54,7 @@ function generateOrderDetail(invoice, plays) {
   return { orderDetails, totalAmount, volumeCredits };
 }
 
-function statement (invoice, plays) {
+function generateStatement(invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
@@ -65,7 +65,11 @@ function statement (invoice, plays) {
   }
   result += `Amount owed is ${formatAmount(totalAmount)}\n`;
   result += `You earned ${volumeCredits} credits \n`;
-  return result;
+  return result
+}
+
+function statement (invoice, plays) {
+  return generateStatement(invoice, plays);
 }
 
 module.exports = {
