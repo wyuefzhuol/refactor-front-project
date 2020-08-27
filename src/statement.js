@@ -30,22 +30,38 @@ function calcAmount(play, perf) {
 }
 
 function addCredits(play, perf) {
+  let volumeCredits = 0;
   volumeCredits += Math.max(perf.audience - 30, 0);
   if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
   return volumeCredits;
+}
+
+function generateOrderDetail(invoice, plays) {
+  let orderDetails = [];
+  let totalAmount = 0;
+  let volumeCredits = 0;
+  for (let perf of invoice.performances) {
+    const play = plays[perf.playID];
+    let thisAmount = calcAmount(play, perf);
+    orderDetails.push({
+      playName: play.name,
+      amount: formatAmount(thisAmount),
+      perfAudience: perf.audience
+    })
+    totalAmount += thisAmount;
+    volumeCredits += addCredits(play, perf);
+  }
+  return { orderDetails, totalAmount, volumeCredits };
 }
 
 function statement (invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
-  for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
-    let thisAmount = calcAmount(play, perf);
-    //print line for this order
-    result += ` ${play.name}: ${formatAmount(thisAmount)} (${perf.audience} seats)\n`;
-    totalAmount += thisAmount;
-    volumeCredits += addCredits(play, perf);
+  for (let orderDetail of generateOrderDetail(invoice, plays).orderDetails) {
+    result += ` ${orderDetail.playName}: ${orderDetail.amount} (${orderDetail.perfAudience} seats)\n`;
+    totalAmount = generateOrderDetail(invoice, plays).totalAmount;
+    volumeCredits = generateOrderDetail(invoice, plays).volumeCredits;
   }
   result += `Amount owed is ${formatAmount(totalAmount)}\n`;
   result += `You earned ${volumeCredits} credits \n`;
