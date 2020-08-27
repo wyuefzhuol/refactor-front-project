@@ -1,67 +1,4 @@
-function formatAmount(amount) {
-  let format = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-    }).format;
-  return format(amount / 100);
-}
-
-function calcTragedyAmount(perf) {
-  let thisAmount = 40000;
-  if (perf.audience > 30) {
-    thisAmount += 1000 * (perf.audience - 30);
-  }
-  return thisAmount;
-}
-
-function calcComedyAmount(perf) {
-  let thisAmount = 30000;
-  if (perf.audience > 20) {
-    thisAmount += 10000 + 500 * (perf.audience - 20);
-  }
-  return thisAmount + 300 * perf.audience;
-}
-
-function calcAmount(play, perf) {
-  let thisAmount = 0;
-  switch (play.type) {
-    case 'tragedy':
-      thisAmount = calcTragedyAmount(perf);
-      break;
-    case 'comedy':
-      thisAmount = calcComedyAmount(perf);
-      break;
-    default:
-      throw new Error(`unknown type: ${play.type}`);
-  }
-  return thisAmount;
-}
-
-function addCredits(play, perf) {
-  let volumeCredits = 0;
-  volumeCredits += Math.max(perf.audience - 30, 0);
-  if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
-  return volumeCredits;
-}
-
-function generateOrderDetail(invoice, plays) {
-  let orderDetails = [];
-  let totalAmount = 0;
-  let volumeCredits = 0;
-  for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
-    let thisAmount = calcAmount(play, perf);
-    orderDetails.push({
-      playName: play.name,
-      amount: formatAmount(thisAmount),
-      perfAudience: perf.audience
-    })
-    totalAmount += thisAmount;
-    volumeCredits += addCredits(play, perf);
-  }
-  return { orderDetails, totalAmount, volumeCredits };
-}
+const {generateOrderDetail} = require('./orderDetails');
 
 function generateStatementTxt(invoice, plays) {
   let result = `Statement for ${invoice.customer}\n`;
@@ -69,7 +6,7 @@ function generateStatementTxt(invoice, plays) {
   for (let orderDetail of order.orderDetails) {
     result += ` ${orderDetail.playName}: ${orderDetail.amount} (${orderDetail.perfAudience} seats)\n`;
   }
-  result += `Amount owed is ${formatAmount(order.totalAmount)}\n`;
+  result += `Amount owed is ${order.totalAmount}\n`;
   result += `You earned ${order.volumeCredits} credits \n`;
   return result
 }
@@ -82,7 +19,7 @@ function generateStatementHtml(invoice, plays) {
     result += ` <li>${orderDetail.playName}: ${orderDetail.amount} (${orderDetail.perfAudience} seats)</li>`;
   }
   result += `</ul>`;
-  result += `<h3>Amount owed is ${formatAmount(order.totalAmount)}</h3>`;
+  result += `<h3>Amount owed is ${order.totalAmount}</h3>`;
   result += `<h4>You earned ${order.volumeCredits} credits</h4>`;
   return result
 }
