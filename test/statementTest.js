@@ -1,5 +1,5 @@
 const test = require('ava');
-const {statement} = require('../src/statement');
+const {statement, statementToHtml} = require('../src/statement');
 
 test('test1: customer Eric without performances', t => {
   //given
@@ -150,6 +150,36 @@ test('test7: customer Eric with a performance not found', t => {
     //then
     t.is(e.message, 'unknown type: tragedy1');
   }
+});
+
+test('test8: customer Eric with a performance 30 hamlet 19 as-like 29 othello to html', t => {
+  //given
+    const invoice = {
+      'customer': 'Eric',
+      'performances': [
+        {
+          'playID': 'hamlet',
+          'audience': 30,
+        },
+        {
+          'playID': 'as-like',
+          'audience': 19,
+        },
+        {
+          'playID': 'othello',
+          'audience': 29,
+        },
+      ],
+    };
+    //when
+    const result = statementToHtml(invoice, plays);
+    //then
+    t.is(result, '<h1>Statement for Eric</h1>' +
+      '<ul> <li>Hamlet: $400.00 (30 seats)</li> ' +
+      '<li>As You Like It: $357.00 (19 seats)</li> ' +
+      '<li>Othello: $400.00 (29 seats)</li></ul>' +
+      '<h3>Amount owed is $1,157.00</h3>' +
+      '<h4>You earned 3 credits</h4>');
 });
 
 const plays = {

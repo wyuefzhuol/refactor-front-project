@@ -87,5 +87,5 @@ function statementToHtml(invoice, plays) {
 }
 
 module.exports = {
-  statement,
+  statement, statementToHtml
 };
