@@ -55,16 +55,13 @@ function generateOrderDetail(invoice, plays) {
 }
 
 function generateStatement(invoice, plays) {
-  let totalAmount = 0;
-  let volumeCredits = 0;
   let result = `Statement for ${invoice.customer}\n`;
-  for (let orderDetail of generateOrderDetail(invoice, plays).orderDetails) {
+  let order = generateOrderDetail(invoice, plays);
+  for (let orderDetail of order.orderDetails) {
     result += ` ${orderDetail.playName}: ${orderDetail.amount} (${orderDetail.perfAudience} seats)\n`;
-    totalAmount = generateOrderDetail(invoice, plays).totalAmount;
-    volumeCredits = generateOrderDetail(invoice, plays).volumeCredits;
   }
-  result += `Amount owed is ${formatAmount(totalAmount)}\n`;
-  result += `You earned ${volumeCredits} credits \n`;
+  result += `Amount owed is ${formatAmount(order.totalAmount)}\n`;
+  result += `You earned ${order.volumeCredits} credits \n`;
   return result
 }
 
