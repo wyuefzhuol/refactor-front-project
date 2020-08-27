@@ -7,14 +7,19 @@ function formatAmount(amount) {
   return format(amount / 100);
 }
 
+function calcTragedyAmount(perf) {
+  let thisAmount = 40000;
+  if (perf.audience > 30) {
+    thisAmount += 1000 * (perf.audience - 30);
+  }
+  return thisAmount;
+}
+
 function calcAmount(play, perf) {
   let thisAmount = 0;
   switch (play.type) {
     case 'tragedy':
-      thisAmount = 40000;
-      if (perf.audience > 30) {
-        thisAmount += 1000 * (perf.audience - 30);
-      }
+      thisAmount = calcTragedyAmount(perf)
       break;
     case 'comedy':
       thisAmount = 30000;
