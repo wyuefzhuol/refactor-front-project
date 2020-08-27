@@ -35,6 +35,26 @@ test('test2: customer Eric with a performance 29 hamlet', t => {
     'You earned 0 credits \n');
 });
 
+test('test3: customer Eric with a performance 30 hamlet', t => {
+  //given
+  const invoice = {
+    'customer': 'Eric',
+    'performances': [
+      {
+        'playID': 'hamlet',
+        'audience': 30,
+      }
+    ]
+  };
+  //when
+  const result = statement(invoice, plays);
+  //then
+  t.is(result, 'Statement for Eric\n' +
+    ' Hamlet: $400.00 (30 seats)\n' +
+    'Amount owed is $400.00\n' +
+    'You earned 0 credits \n');
+});
+
 const invoice = {
   'customer': 'BigCo',
   'performances': [
