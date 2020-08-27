@@ -55,6 +55,26 @@ test('test3: customer Eric with a performance 30 hamlet', t => {
     'You earned 0 credits \n');
 });
 
+test('test4: customer Eric with a performance 19 as-like', t => {
+  //given
+  const invoice = {
+    'customer': 'Eric',
+    'performances': [
+      {
+        'playID': 'as-like',
+        'audience': 19,
+      }
+    ]
+  };
+  //when
+  const result = statement(invoice, plays);
+  //then
+  t.is(result, 'Statement for Eric\n' +
+    ' As You Like It: $357.00 (19 seats)\n' +
+    'Amount owed is $357.00\n' +
+    'You earned 3 credits \n');
+});
+
 const invoice = {
   'customer': 'BigCo',
   'performances': [
